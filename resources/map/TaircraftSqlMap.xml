@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Taircraft" class="com.vma.code.domain.Taircraft">
+        <result property="aircraftId" column="aircraft_id"/>
+        <result property="aircraftName" column="aircraft_name"/>
+        <result property="aircraftStandard" column="aircraft_standard"/>
+        <result property="engineStandard" column="engine_standard"/>
+        <result property="aircraftFactory" column="aircraft_factory"/>
+        <result property="engineFactory" column="engine_factory"/>
+        <result property="length" column="length"/>
+        <result property="width" column="width"/>
+        <result property="weight" column="weight"/>
+        <result property="contain" column="contain"/>
+        <result property="lifetime" column="lifetime"/>
+        <result property="flytime" column="flytime"/>
+        <result property="distance" column="distance"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Taircraft.columns">
+	    <![CDATA[
+        t_aircraft.aircraft_id ,t_aircraft.aircraft_name ,t_aircraft.aircraft_standard ,t_aircraft.engine_standard ,t_aircraft.aircraft_factory ,t_aircraft.engine_factory ,t_aircraft.length ,t_aircraft.width ,t_aircraft.weight ,t_aircraft.contain ,t_aircraft.lifetime ,t_aircraft.flytime ,t_aircraft.distance ,t_aircraft.field1 ,t_aircraft.field2 ,t_aircraft.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="Taircraft.insert" >
+	   INSERT INTO t_aircraft (
+        	aircraft_id  
+        	 <isNotEmpty  property="aircraftName" prepend=",">aircraft_name </isNotEmpty>
+        	 <isNotEmpty  property="aircraftStandard" prepend=",">aircraft_standard </isNotEmpty>
+        	 <isNotEmpty  property="engineStandard" prepend=",">engine_standard </isNotEmpty>
+        	 <isNotEmpty  property="aircraftFactory" prepend=",">aircraft_factory </isNotEmpty>
+        	 <isNotEmpty  property="engineFactory" prepend=",">engine_factory </isNotEmpty>
+        	 <isNotEmpty  property="length" prepend=",">length </isNotEmpty>
+        	 <isNotEmpty  property="width" prepend=",">width </isNotEmpty>
+        	 <isNotEmpty  property="weight" prepend=",">weight </isNotEmpty>
+        	 <isNotEmpty  property="contain" prepend=",">contain </isNotEmpty>
+        	 <isNotEmpty  property="lifetime" prepend=",">lifetime </isNotEmpty>
+        	 <isNotEmpty  property="flytime" prepend=",">flytime </isNotEmpty>
+        	 <isNotEmpty  property="distance" prepend=",">distance </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #aircraftId# ]]> 
+        	 <isNotEmpty  property="aircraftName"  prepend=","> <![CDATA[#aircraftName#]]></isNotEmpty>
+        	 <isNotEmpty  property="aircraftStandard"  prepend=","> <![CDATA[#aircraftStandard#]]></isNotEmpty>
+        	 <isNotEmpty  property="engineStandard"  prepend=","> <![CDATA[#engineStandard#]]></isNotEmpty>
+        	 <isNotEmpty  property="aircraftFactory"  prepend=","> <![CDATA[#aircraftFactory#]]></isNotEmpty>
+        	 <isNotEmpty  property="engineFactory"  prepend=","> <![CDATA[#engineFactory#]]></isNotEmpty>
+        	 <isNotEmpty  property="length"  prepend=","> <![CDATA[#length#]]></isNotEmpty>
+        	 <isNotEmpty  property="width"  prepend=","> <![CDATA[#width#]]></isNotEmpty>
+        	 <isNotEmpty  property="weight"  prepend=","> <![CDATA[#weight#]]></isNotEmpty>
+        	 <isNotEmpty  property="contain"  prepend=","> <![CDATA[#contain#]]></isNotEmpty>
+        	 <isNotEmpty  property="lifetime"  prepend=","> <![CDATA[#lifetime#]]></isNotEmpty>
+        	 <isNotEmpty  property="flytime"  prepend=","> <![CDATA[#flytime#]]></isNotEmpty>
+        	 <isNotEmpty  property="distance"  prepend=","> <![CDATA[#distance#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="aircraftId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Taircraft.update" >
+        UPDATE t_aircraft SET
+	        aircraft_id = #aircraftId# 
+	       <isNotEmpty  property="aircraftName" prepend="," ><![CDATA[ aircraft_name = #aircraftName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="aircraftStandard" prepend="," ><![CDATA[ aircraft_standard = #aircraftStandard# ]]> </isNotEmpty>
+	       <isNotEmpty  property="engineStandard" prepend="," ><![CDATA[ engine_standard = #engineStandard# ]]> </isNotEmpty>
+	       <isNotEmpty  property="aircraftFactory" prepend="," ><![CDATA[ aircraft_factory = #aircraftFactory# ]]> </isNotEmpty>
+	       <isNotEmpty  property="engineFactory" prepend="," ><![CDATA[ engine_factory = #engineFactory# ]]> </isNotEmpty>
+	       <isNotEmpty  property="length" prepend="," ><![CDATA[ length = #length# ]]> </isNotEmpty>
+	       <isNotEmpty  property="width" prepend="," ><![CDATA[ width = #width# ]]> </isNotEmpty>
+	       <isNotEmpty  property="weight" prepend="," ><![CDATA[ weight = #weight# ]]> </isNotEmpty>
+	       <isNotEmpty  property="contain" prepend="," ><![CDATA[ contain = #contain# ]]> </isNotEmpty>
+	       <isNotEmpty  property="lifetime" prepend="," ><![CDATA[ lifetime = #lifetime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="flytime" prepend="," ><![CDATA[ flytime = #flytime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="distance" prepend="," ><![CDATA[ distance = #distance# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        aircraft_id = #aircraftId# 
+    </update>
+
+    <delete id="Taircraft.delete">
+    <![CDATA[
+        DELETE FROM t_aircraft WHERE
+        aircraft_id = #aircraftId# 
+    ]]>
+    </delete>
+    
+    <delete id="Taircraft.deleteByIds">
+   
+    	delete from t_aircraft where 
+    	aircraft_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+      
+    </delete>
+    
+    <select id="Taircraft.getById" resultMap="RM.Taircraft">
+	    SELECT <include refid="Taircraft.columns"/>
+	    <![CDATA[
+	        FROM t_aircraft 
+	        WHERE 
+		        aircraft_id = #aircraftId# 
+	    ]]>
+    </select>
+	
+	<sql id="Taircraft.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="aircraftId">
+		            <![CDATA[ t_aircraft.aircraft_id = #aircraftId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftName">
+		            <![CDATA[ t_aircraft.aircraft_name LIKE concat('%',#aircraftName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftStandard">
+		            <![CDATA[ t_aircraft.aircraft_standard LIKE concat('%',#aircraftStandard#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="engineStandard">
+		            <![CDATA[ t_aircraft.engine_standard LIKE concat('%',#engineStandard#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftFactory">
+		            <![CDATA[ t_aircraft.aircraft_factory LIKE concat('%',#aircraftFactory#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="engineFactory">
+		            <![CDATA[ t_aircraft.engine_factory LIKE concat('%',#engineFactory#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="length">
+		            <![CDATA[ t_aircraft.length LIKE concat('%',#length#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="width">
+		            <![CDATA[ t_aircraft.width LIKE concat('%',#width#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="weight">
+		            <![CDATA[ t_aircraft.weight LIKE concat('%',#weight#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="contain">
+		            <![CDATA[ t_aircraft.contain LIKE concat('%',#contain#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="lifetime">
+		            <![CDATA[ t_aircraft.lifetime LIKE concat('%',#lifetime#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="flytime">
+		            <![CDATA[ t_aircraft.flytime LIKE concat('%',#flytime#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="distance">
+		            <![CDATA[ t_aircraft.distance LIKE concat('%',#distance#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_aircraft.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_aircraft.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_aircraft.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="Taircraft.findPage.count" resultClass="long">
+        SELECT count(*) FROM t_aircraft <include refid="Taircraft.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="Taircraft.findPage" resultMap="RM.Taircraft">
+    	SELECT <include refid="Taircraft.columns"/> FROM t_aircraft 
+		<include refid="Taircraft.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="Taircraft.findAll" resultMap="RM.Taircraft">
+    	SELECT <include refid="Taircraft.columns"/> FROM t_aircraft
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="Taircraft.findByCondition" resultMap="RM.Taircraft">
+    	SELECT <include refid="Taircraft.columns"/> FROM t_aircraft 
+		<include refid="Taircraft.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="Taircraft.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="aircraftId">
+		            <![CDATA[ t_aircraft.aircraft_id <> #aircraftId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftName">
+		            <![CDATA[ t_aircraft.aircraft_name = #aircraftName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftStandard">
+		            <![CDATA[ t_aircraft.aircraft_standard = #aircraftStandard# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="engineStandard">
+		            <![CDATA[ t_aircraft.engine_standard = #engineStandard# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftFactory">
+		            <![CDATA[ t_aircraft.aircraft_factory = #aircraftFactory# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="engineFactory">
+		            <![CDATA[ t_aircraft.engine_factory = #engineFactory# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="length">
+		            <![CDATA[ t_aircraft.length = #length# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="width">
+		            <![CDATA[ t_aircraft.width = #width# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="weight">
+		            <![CDATA[ t_aircraft.weight = #weight# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="contain">
+		            <![CDATA[ t_aircraft.contain = #contain# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="lifetime">
+		            <![CDATA[ t_aircraft.lifetime = #lifetime# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="flytime">
+		            <![CDATA[ t_aircraft.flytime = #flytime# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="distance">
+		            <![CDATA[ t_aircraft.distance = #distance# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_aircraft.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_aircraft.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_aircraft.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="Taircraft.isUnique" resultClass="long">
+        SELECT count(*) FROM t_aircraft  <include refid="Taircraft.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Trepaire" class="com.vma.code.domain.Trepaire">
+        <result property="repaireId" column="repaire_id"/>
+        <result property="aircraftId" column="aircraft_id"/>
+        <result property="aircraftName" column="aircraft_name"/>
+        <result property="breakContent" column="break_content"/>
+        <result property="paln" column="paln"/>
+        <result property="operator" column="operator"/>
+        <result property="firstTime" column="first_time"/>
+        <result property="lastTime" column="last_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Trepaire.columns">
+	    <![CDATA[
+        t_repaire.repaire_id ,t_repaire.aircraft_id ,t_aircraft.aircraft_name ,t_repaire.break_content ,t_repaire.paln ,t_repaire.operator ,t_repaire.first_time ,t_repaire.last_time ,t_repaire.user_id ,t_repaire.field1 ,t_repaire.field2 ,t_repaire.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="Trepaire.insert" >
+	   INSERT INTO t_repaire (
+        	repaire_id  
+        	 <isNotEmpty  property="aircraftId" prepend=",">aircraft_id </isNotEmpty>
+        	 <isNotEmpty  property="aircraftName" prepend=",">aircraft_name </isNotEmpty>
+        	 <isNotEmpty  property="breakContent" prepend=",">break_content </isNotEmpty>
+        	 <isNotEmpty  property="paln" prepend=",">paln </isNotEmpty>
+        	 <isNotEmpty  property="operator" prepend=",">operator </isNotEmpty>
+        	 <isNotEmpty  property="firstTime" prepend=",">first_time </isNotEmpty>
+        	 <isNotEmpty  property="lastTime" prepend=",">last_time </isNotEmpty>
+        	 <isNotEmpty  property="userId" prepend=",">user_id </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #repaireId# ]]> 
+        	 <isNotEmpty  property="aircraftId"  prepend=","> <![CDATA[#aircraftId#]]></isNotEmpty>
+        	 <isNotEmpty  property="aircraftName"  prepend=","> <![CDATA[#aircraftName#]]></isNotEmpty>
+        	 <isNotEmpty  property="breakContent"  prepend=","> <![CDATA[#breakContent#]]></isNotEmpty>
+        	 <isNotEmpty  property="paln"  prepend=","> <![CDATA[#paln#]]></isNotEmpty>
+        	 <isNotEmpty  property="operator"  prepend=","> <![CDATA[#operator#]]></isNotEmpty>
+        	 <isNotEmpty  property="firstTime"  prepend=","> <![CDATA[#firstTime#]]></isNotEmpty>
+        	 <isNotEmpty  property="lastTime"  prepend=","> <![CDATA[#lastTime#]]></isNotEmpty>
+        	 <isNotEmpty  property="userId"  prepend=","> <![CDATA[#userId#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="repaireId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Trepaire.update" >
+        UPDATE t_repaire SET
+	        repaire_id = #repaireId# 
+	       <isNotEmpty  property="aircraftId" prepend="," ><![CDATA[ aircraft_id = #aircraftId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="aircraftName" prepend="," ><![CDATA[ aircraft_name = #aircraftName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="breakContent" prepend="," ><![CDATA[ break_content = #breakContent# ]]> </isNotEmpty>
+	       <isNotEmpty  property="paln" prepend="," ><![CDATA[ paln = #paln# ]]> </isNotEmpty>
+	       <isNotEmpty  property="operator" prepend="," ><![CDATA[ operator = #operator# ]]> </isNotEmpty>
+	       <isNotEmpty  property="firstTime" prepend="," ><![CDATA[ first_time = #firstTime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="lastTime" prepend="," ><![CDATA[ last_time = #lastTime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="userId" prepend="," ><![CDATA[ user_id = #userId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        repaire_id = #repaireId# 
+    </update>
+
+    <delete id="Trepaire.delete">
+    <![CDATA[
+        DELETE FROM t_repaire WHERE
+        repaire_id = #repaireId# 
+    ]]>
+    </delete>
+    
+    <delete id="Trepaire.deleteByIds">
+    
+    	delete from t_repaire where 
+    	repaire_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+      
+    </delete>
+    
+    <select id="Trepaire.getById" resultMap="RM.Trepaire">
+	    SELECT <include refid="Trepaire.columns"/>
+	    <![CDATA[
+	        FROM t_repaire 
+	        left join t_aircraft on t_repaire.aircraft_id = t_aircraft.aircraft_id
+	        WHERE 
+		        repaire_id = #repaireId# 
+	    ]]>
+    </select>
+	
+	<sql id="Trepaire.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="repaireId">
+		            <![CDATA[ t_repaire.repaire_id = #repaireId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftId">
+		            <![CDATA[ t_repaire.aircraft_id = #aircraftId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftName">
+		            <![CDATA[ t_repaire.aircraft_name LIKE concat('%',#aircraftName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="breakContent">
+		            <![CDATA[ t_repaire.break_content LIKE concat('%',#breakContent#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="paln">
+		            <![CDATA[ t_repaire.paln LIKE concat('%',#paln#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="operator">
+		            <![CDATA[ t_repaire.operator LIKE concat('%',#operator#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="firstTimeBegin">
+		            <![CDATA[ t_repaire.first_time >= #firstTimeBegin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="firstTimeEnd">
+		       		<![CDATA[ t_repaire.first_time <= #firstTimeEnd# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="lastTimeBegin">
+		            <![CDATA[ t_repaire.last_time >= #lastTimeBegin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="lastTimeEnd">
+		       		<![CDATA[ t_repaire.last_time <= #lastTimeEnd# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userId">
+		            <![CDATA[ t_repaire.user_id = #userId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_repaire.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_repaire.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_repaire.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="Trepaire.findPage.count" resultClass="long">
+        SELECT count(*) FROM t_repaire <include refid="Trepaire.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="Trepaire.findPage" resultMap="RM.Trepaire">
+    	SELECT <include refid="Trepaire.columns"/> FROM t_repaire 
+    	left join t_aircraft on t_repaire.aircraft_id = t_aircraft.aircraft_id
+		<include refid="Trepaire.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="Trepaire.findAll" resultMap="RM.Trepaire">
+    	SELECT <include refid="Trepaire.columns"/> FROM t_repaire
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="Trepaire.findByCondition" resultMap="RM.Trepaire">
+    	SELECT <include refid="Trepaire.columns"/> FROM t_repaire
+    	left join t_aircraft on t_repaire.aircraft_id = t_aircraft.aircraft_id 
+		<include refid="Trepaire.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="Trepaire.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="repaireId">
+		            <![CDATA[ t_repaire.repaire_id <> #repaireId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftId">
+		            <![CDATA[ t_repaire.aircraft_id = #aircraftId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftName">
+		            <![CDATA[ t_repaire.aircraft_name = #aircraftName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="breakContent">
+		            <![CDATA[ t_repaire.break_content = #breakContent# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="paln">
+		            <![CDATA[ t_repaire.paln = #paln# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="operator">
+		            <![CDATA[ t_repaire.operator = #operator# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userId">
+		            <![CDATA[ t_repaire.user_id = #userId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_repaire.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_repaire.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_repaire.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="Trepaire.isUnique" resultClass="long">
+        SELECT count(*) FROM t_repaire  <include refid="Trepaire.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

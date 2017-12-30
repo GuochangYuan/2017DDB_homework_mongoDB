@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Tbreak" class="com.vma.code.domain.Tbreak">
+        <result property="breakId" column="break_id"/>
+        <result property="aircraftId" column="aircraft_id"/>
+        <result property="aircraftName" column="aircraft_name"/>
+        <result property="breakName" column="break_name"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Tbreak.columns">
+	    <![CDATA[
+        t_break.break_id ,t_break.aircraft_id ,t_aircraft.aircraft_name ,t_break.break_name ,t_break.content ,t_break.create_time ,t_break.user_id ,t_break.field1 ,t_break.field2 ,t_break.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="Tbreak.insert" >
+	   INSERT INTO t_break (
+        	break_id  
+        	 <isNotEmpty  property="aircraftId" prepend=",">aircraft_id </isNotEmpty>
+        	 <isNotEmpty  property="aircraftName" prepend=",">aircraft_name </isNotEmpty>
+        	 <isNotEmpty  property="breakName" prepend=",">break_name </isNotEmpty>
+        	 <isNotEmpty  property="content" prepend=",">content </isNotEmpty>
+        	 <isNotEmpty  property="createTime" prepend=",">create_time </isNotEmpty>
+        	 <isNotEmpty  property="userId" prepend=",">user_id </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #breakId# ]]> 
+        	 <isNotEmpty  property="aircraftId"  prepend=","> <![CDATA[#aircraftId#]]></isNotEmpty>
+        	 <isNotEmpty  property="aircraftName"  prepend=","> <![CDATA[#aircraftName#]]></isNotEmpty>
+        	 <isNotEmpty  property="breakName"  prepend=","> <![CDATA[#breakName#]]></isNotEmpty>
+        	 <isNotEmpty  property="content"  prepend=","> <![CDATA[#content#]]></isNotEmpty>
+        	 <isNotEmpty  property="createTime"  prepend=","> <![CDATA[#createTime#]]></isNotEmpty>
+        	 <isNotEmpty  property="userId"  prepend=","> <![CDATA[#userId#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="breakId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Tbreak.update" >
+        UPDATE t_break SET
+	        break_id = #breakId# 
+	       <isNotEmpty  property="aircraftId" prepend="," ><![CDATA[ aircraft_id = #aircraftId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="aircraftName" prepend="," ><![CDATA[ aircraft_name = #aircraftName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="breakName" prepend="," ><![CDATA[ break_name = #breakName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="content" prepend="," ><![CDATA[ content = #content# ]]> </isNotEmpty>
+	       <isNotEmpty  property="createTime" prepend="," ><![CDATA[ create_time = #createTime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="userId" prepend="," ><![CDATA[ user_id = #userId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        break_id = #breakId# 
+    </update>
+
+    <delete id="Tbreak.delete">
+    <![CDATA[
+        DELETE FROM t_break WHERE
+        break_id = #breakId# 
+    ]]>
+    </delete>
+    
+    <delete id="Tbreak.deleteByIds">
+   
+    	delete from t_break where 
+    	break_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+     
+    </delete>
+    
+    <select id="Tbreak.getById" resultMap="RM.Tbreak">
+	    SELECT <include refid="Tbreak.columns"/>
+	    <![CDATA[
+	        FROM t_break
+	        left join t_aircraft on t_break.aircraft_id = t_aircraft.aircraft_id 
+	        WHERE 
+		        break_id = #breakId# 
+	    ]]>
+    </select>
+	
+	<sql id="Tbreak.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="breakId">
+		            <![CDATA[ t_break.break_id = #breakId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftId">
+		            <![CDATA[ t_break.aircraft_id = #aircraftId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftName">
+		            <![CDATA[ t_break.aircraft_name LIKE concat('%',#aircraftName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="breakName">
+		            <![CDATA[ t_break.break_name LIKE concat('%',#breakName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="content">
+		            <![CDATA[ t_break.content LIKE concat('%',#content#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeBegin">
+		            <![CDATA[ t_break.create_time >= #createTimeBegin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeEnd">
+		       		<![CDATA[ t_break.create_time <= #createTimeEnd# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userId">
+		            <![CDATA[ t_break.user_id = #userId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_break.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_break.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_break.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="Tbreak.findPage.count" resultClass="long">
+        SELECT count(*) FROM t_break <include refid="Tbreak.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="Tbreak.findPage" resultMap="RM.Tbreak">
+    	SELECT <include refid="Tbreak.columns"/> FROM t_break 
+    	left join t_aircraft on t_break.aircraft_id = t_aircraft.aircraft_id
+		<include refid="Tbreak.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="Tbreak.findAll" resultMap="RM.Tbreak">
+    	SELECT <include refid="Tbreak.columns"/> FROM t_break
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="Tbreak.findByCondition" resultMap="RM.Tbreak">
+    	SELECT <include refid="Tbreak.columns"/> FROM t_break 
+    	left join t_aircraft on t_break.aircraft_id = t_aircraft.aircraft_id
+		<include refid="Tbreak.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="Tbreak.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="breakId">
+		            <![CDATA[ t_break.break_id <> #breakId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftId">
+		            <![CDATA[ t_break.aircraft_id = #aircraftId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="aircraftName">
+		            <![CDATA[ t_break.aircraft_name = #aircraftName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="breakName">
+		            <![CDATA[ t_break.break_name = #breakName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="content">
+		            <![CDATA[ t_break.content = #content# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userId">
+		            <![CDATA[ t_break.user_id = #userId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_break.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_break.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_break.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="Tbreak.isUnique" resultClass="long">
+        SELECT count(*) FROM t_break  <include refid="Tbreak.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

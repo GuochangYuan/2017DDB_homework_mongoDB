@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Tfile" class="com.vma.code.domain.Tfile">
+        <result property="fileId" column="file_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="address" column="address"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Tfile.columns">
+	    <![CDATA[
+        t_file.file_id ,t_file.file_name ,t_file.address ,t_file.status ,t_file.create_time ,t_file.field1 ,hy_user.real_name as field2 ,t_file.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="Tfile.insert" >
+	   INSERT INTO t_file (
+        	file_id  
+        	 <isNotEmpty  property="fileName" prepend=",">file_name </isNotEmpty>
+        	 <isNotEmpty  property="address" prepend=",">address </isNotEmpty>
+        	 <isNotEmpty  property="status" prepend=",">status </isNotEmpty>
+        	 ,create_time
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #fileId# ]]> 
+        	 <isNotEmpty  property="fileName"  prepend=","> <![CDATA[#fileName#]]></isNotEmpty>
+        	 <isNotEmpty  property="address"  prepend=","> <![CDATA[#address#]]></isNotEmpty>
+        	 <isNotEmpty  property="status"  prepend=","> <![CDATA[#status#]]></isNotEmpty>
+        	 ,Now()
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="fileId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Tfile.update" >
+        UPDATE t_file SET
+	        file_id = #fileId# 
+	       <isNotEmpty  property="fileName" prepend="," ><![CDATA[ file_name = #fileName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="address" prepend="," ><![CDATA[ address = #address# ]]> </isNotEmpty>
+	       <isNotEmpty  property="status" prepend="," ><![CDATA[ status = #status# ]]> </isNotEmpty>
+	       <isNotEmpty  property="createTime" prepend="," ><![CDATA[ create_time = #createTime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        file_id = #fileId# 
+    </update>
+
+    <delete id="Tfile.delete">
+    <![CDATA[
+        DELETE FROM t_file WHERE
+        file_id = #fileId# 
+    ]]>
+    </delete>
+    
+    <delete id="Tfile.deleteByIds">
+     
+    	delete from t_file where 
+    	file_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+      
+    </delete>
+    
+    <select id="Tfile.getById" resultMap="RM.Tfile">
+	    SELECT <include refid="Tfile.columns"/>
+	    <![CDATA[
+	        FROM t_file 
+	        left join hy_user on hy_user.user_id = t_file.field1
+	        WHERE 
+		        file_id = #fileId# 
+	    ]]>
+    </select>
+	
+	<sql id="Tfile.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="fileId">
+		            <![CDATA[ t_file.file_id = #fileId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="fileName">
+		            <![CDATA[ t_file.file_name LIKE concat('%',#fileName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="address">
+		            <![CDATA[ t_file.address LIKE concat('%',#address#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="status">
+		            <![CDATA[ t_file.status LIKE concat('%',#status#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeBegin">
+		            <![CDATA[ t_file.create_time >= #createTimeBegin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeEnd">
+		       		<![CDATA[ t_file.create_time <= #createTimeEnd# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_file.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_file.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_file.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="Tfile.findPage.count" resultClass="long">
+        SELECT count(*) FROM t_file <include refid="Tfile.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="Tfile.findPage" resultMap="RM.Tfile">
+    	SELECT <include refid="Tfile.columns"/> FROM t_file 
+    	left join hy_user on hy_user.user_id = t_file.field1
+		<include refid="Tfile.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="Tfile.findAll" resultMap="RM.Tfile">
+    	SELECT <include refid="Tfile.columns"/> FROM t_file
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="Tfile.findByCondition" resultMap="RM.Tfile">
+    	SELECT <include refid="Tfile.columns"/> FROM t_file 
+    	left join hy_user on hy_user.user_id = t_file.field1
+		<include refid="Tfile.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="Tfile.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="fileId">
+		            <![CDATA[ t_file.file_id <> #fileId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="fileName">
+		            <![CDATA[ t_file.file_name = #fileName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="address">
+		            <![CDATA[ t_file.address = #address# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="status">
+		            <![CDATA[ t_file.status = #status# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_file.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_file.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_file.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="Tfile.isUnique" resultClass="long">
+        SELECT count(*) FROM t_file  <include refid="Tfile.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

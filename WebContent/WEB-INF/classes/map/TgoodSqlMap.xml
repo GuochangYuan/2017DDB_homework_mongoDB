@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Tgood" class="com.vma.code.domain.Tgood">
+        <result property="goodId" column="good_id"/>
+        <result property="goodName" column="good_name"/>
+        <result property="goodType" column="good_type"/>
+        <result property="goodUnit" column="good_unit"/>
+        <result property="minStock" column="min_stock"/>
+        <result property="stock" column="stock"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+        <result property="field4" column="field4"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Tgood.columns">
+	    <![CDATA[
+        t_good.good_id ,t_good.good_name ,t_good.good_type ,t_good.good_unit ,t_good.min_stock ,t_good.stock ,t_good.field1 ,t_good.field2 ,t_good.field3 ,t_good.field4 
+	    ]]>
+	</sql>
+	
+    <insert id="Tgood.insert" >
+	   INSERT INTO t_good (
+        	good_id  
+        	 <isNotEmpty  property="goodName" prepend=",">good_name </isNotEmpty>
+        	 <isNotEmpty  property="goodType" prepend=",">good_type </isNotEmpty>
+        	 <isNotEmpty  property="goodUnit" prepend=",">good_unit </isNotEmpty>
+        	 <isNotEmpty  property="minStock" prepend=",">min_stock </isNotEmpty>
+        	 <isNotEmpty  property="stock" prepend=",">stock </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        	 <isNotEmpty  property="field4" prepend=",">field4 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #goodId# ]]> 
+        	 <isNotEmpty  property="goodName"  prepend=","> <![CDATA[#goodName#]]></isNotEmpty>
+        	 <isNotEmpty  property="goodType"  prepend=","> <![CDATA[#goodType#]]></isNotEmpty>
+        	 <isNotEmpty  property="goodUnit"  prepend=","> <![CDATA[#goodUnit#]]></isNotEmpty>
+        	 <isNotEmpty  property="minStock"  prepend=","> <![CDATA[#minStock#]]></isNotEmpty>
+        	 <isNotEmpty  property="stock"  prepend=","> <![CDATA[#stock#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        	 <isNotEmpty  property="field4"  prepend=","> <![CDATA[#field4#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="goodId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Tgood.update" >
+        UPDATE t_good SET
+	        good_id = #goodId# 
+	       <isNotEmpty  property="goodName" prepend="," ><![CDATA[ good_name = #goodName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="goodType" prepend="," ><![CDATA[ good_type = #goodType# ]]> </isNotEmpty>
+	       <isNotEmpty  property="goodUnit" prepend="," ><![CDATA[ good_unit = #goodUnit# ]]> </isNotEmpty>
+	       <isNotEmpty  property="minStock" prepend="," ><![CDATA[ min_stock = #minStock# ]]> </isNotEmpty>
+	       <isNotEmpty  property="stock" prepend="," ><![CDATA[ stock = #stock# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field4" prepend="," ><![CDATA[ field4 = #field4# ]]> </isNotEmpty>
+        WHERE 
+	        good_id = #goodId# 
+    </update>
+
+    <delete id="Tgood.delete">
+    <![CDATA[
+        DELETE FROM t_good WHERE
+        good_id = #goodId# 
+    ]]>
+    </delete>
+    
+    <delete id="Tgood.deleteByIds">
+    
+    	delete from t_good where 
+    	good_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+     
+    </delete>
+    
+    <select id="Tgood.getById" resultMap="RM.Tgood">
+	    SELECT <include refid="Tgood.columns"/>
+	    <![CDATA[
+	        FROM t_good 
+	        WHERE 
+		        good_id = #goodId# 
+	    ]]>
+    </select>
+	
+	<sql id="Tgood.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="goodId">
+		            <![CDATA[ t_good.good_id = #goodId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="goodName">
+		            <![CDATA[ t_good.good_name LIKE concat('%',#goodName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="goodType">
+		            <![CDATA[ t_good.good_type LIKE concat('%',#goodType#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="goodUnit">
+		            <![CDATA[ t_good.good_unit LIKE concat('%',#goodUnit#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="minStock">
+		            <![CDATA[ t_good.min_stock = #minStock# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="stock">
+		            <![CDATA[ t_good.stock = #stock# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_good.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_good.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_good.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field4">
+		            <![CDATA[ t_good.field4 LIKE concat('%',#field4#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="Tgood.findPage.count" resultClass="long">
+        SELECT count(*) FROM t_good <include refid="Tgood.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="Tgood.findPage" resultMap="RM.Tgood">
+    	SELECT <include refid="Tgood.columns"/> FROM t_good 
+		<include refid="Tgood.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="Tgood.findAll" resultMap="RM.Tgood">
+    	SELECT <include refid="Tgood.columns"/> FROM t_good
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="Tgood.findByCondition" resultMap="RM.Tgood">
+    	SELECT <include refid="Tgood.columns"/> FROM t_good 
+		<include refid="Tgood.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="Tgood.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="goodId">
+		            <![CDATA[ t_good.good_id <> #goodId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="goodName">
+		            <![CDATA[ t_good.good_name = #goodName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="goodType">
+		            <![CDATA[ t_good.good_type = #goodType# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="goodUnit">
+		            <![CDATA[ t_good.good_unit = #goodUnit# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="minStock">
+		            <![CDATA[ t_good.min_stock = #minStock# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="stock">
+		            <![CDATA[ t_good.stock = #stock# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_good.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_good.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_good.field3 = #field3# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field4">
+		            <![CDATA[ t_good.field4 = #field4# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="Tgood.isUnique" resultClass="long">
+        SELECT count(*) FROM t_good  <include refid="Tgood.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.Tmenu" class="com.vma.code.domain.Tmenu">
+        <result property="menuId" column="menu_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuUrl" column="menu_url"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Tmenu.columns">
+	    <![CDATA[
+        t_menu.menu_id ,t_menu.menu_name ,t_menu.menu_url ,t_menu.parent_id ,t_menu.field1 ,t_menu.field2 ,t_menu.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="Tmenu.insert" >
+	   INSERT INTO t_menu (
+        	menu_id  
+        	 <isNotEmpty  property="menuName" prepend=",">menu_name </isNotEmpty>
+        	 <isNotEmpty  property="menuUrl" prepend=",">menu_url </isNotEmpty>
+        	 <isNotEmpty  property="parentId" prepend=",">parent_id </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #menuId# ]]> 
+        	 <isNotEmpty  property="menuName"  prepend=","> <![CDATA[#menuName#]]></isNotEmpty>
+        	 <isNotEmpty  property="menuUrl"  prepend=","> <![CDATA[#menuUrl#]]></isNotEmpty>
+        	 <isNotEmpty  property="parentId"  prepend=","> <![CDATA[#parentId#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Long" type="post" keyProperty="menuId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="Tmenu.update" >
+        UPDATE t_menu SET
+	        menu_id = #menuId# 
+	       <isNotEmpty  property="menuName" prepend="," ><![CDATA[ menu_name = #menuName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="menuUrl" prepend="," ><![CDATA[ menu_url = #menuUrl# ]]> </isNotEmpty>
+	       <isNotEmpty  property="parentId" prepend="," ><![CDATA[ parent_id = #parentId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        menu_id = #menuId# 
+    </update>
+
+    <delete id="Tmenu.delete">
+    <![CDATA[
+        DELETE FROM t_menu WHERE
+        menu_id = #menuId# 
+    ]]>
+    </delete>
+    
+    <select id="Tmenu.getById" resultMap="RM.Tmenu">
+	    SELECT <include refid="Tmenu.columns"/>
+	    <![CDATA[
+	        FROM t_menu 
+	        WHERE 
+		        menu_id = #menuId# 
+	    ]]>
+    </select>
+	
+	<sql id="Tmenu.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="menuId">
+		            <![CDATA[ t_menu.menu_id = #menuId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="menuName">
+		            <![CDATA[ t_menu.menu_name LIKE concat('%',#menuName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="menuUrl">
+		            <![CDATA[ t_menu.menu_url LIKE concat('%',#menuUrl#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="parentId">
+		            <![CDATA[ t_menu.parent_id = #parentId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_menu.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_menu.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_menu.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="Tmenu.findPage.count" resultClass="long">
+        SELECT count(*) FROM t_menu <include refid="Tmenu.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="Tmenu.findPage" resultMap="RM.Tmenu">
+    	SELECT <include refid="Tmenu.columns"/> FROM t_menu 
+		<include refid="Tmenu.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="Tmenu.findAll" resultMap="RM.Tmenu">
+    	SELECT <include refid="Tmenu.columns"/> FROM t_menu
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="Tmenu.findByCondition" resultMap="RM.Tmenu">
+    	SELECT <include refid="Tmenu.columns"/> FROM t_menu 
+		<include refid="Tmenu.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="Tmenu.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="menuId">
+		            <![CDATA[ t_menu.menu_id <> #menuId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="menuName">
+		            <![CDATA[ t_menu.menu_name = #menuName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="menuUrl">
+		            <![CDATA[ t_menu.menu_url = #menuUrl# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="parentId">
+		            <![CDATA[ t_menu.parent_id = #parentId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ t_menu.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ t_menu.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ t_menu.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="Tmenu.isUnique" resultClass="long">
+        SELECT count(*) FROM t_menu  <include refid="Tmenu.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

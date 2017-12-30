@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.HyUser" class="com.vma.code.domain.HyUser">
+        <result property="userId" column="user_id"/>
+        <result property="userNo" column="user_no"/>
+        <result property="realName" column="real_name"/>
+        <result property="phoneNum" column="phone_num"/>
+        <result property="address" column="address"/>
+        <result property="dtId" column="dt_id"/>
+        <result property="workId" column="work_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="userRemark" column="user_remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="field1" column="field1"/>
+        <result property="dtName" column="dt_name"/>
+        <result property="emTypeWork" column="work_name"/>
+        <result property="baseSalary" column="base_salary"/>
+        <result property="isAdmin" column="isAdmin"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="HyUser.columns">
+	    <![CDATA[
+        hy_user.user_id ,hy_user.user_no ,hy_user.real_name ,hy_user.phone_num ,hy_user.address ,hy_user.dt_id ,hy_user.work_id ,hy_user.role_id ,hy_user.user_status ,hy_user.user_remark ,hy_user.create_time ,hy_user.field1 ,tb_department.dt_name ,tb_work.work_name ,hy_user.base_salary ,hy_user.isAdmin ,hy_user.field2 ,hy_user.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="HyUser.insert" >
+	   INSERT INTO hy_user (
+        	user_id  
+        	 <isNotEmpty  property="userNo" prepend=",">user_no </isNotEmpty>
+        	 <isNotEmpty  property="realName" prepend=",">real_name </isNotEmpty>
+        	 <isNotEmpty  property="phoneNum" prepend=",">phone_num </isNotEmpty>
+        	 <isNotEmpty  property="address" prepend=",">address </isNotEmpty>
+        	 <isNotEmpty  property="dtId" prepend=",">dt_id </isNotEmpty>
+        	 <isNotEmpty  property="workId" prepend=",">work_id </isNotEmpty>
+        	 <isNotEmpty  property="roleId" prepend=",">role_id </isNotEmpty>
+        	 <isNotEmpty  property="userStatus" prepend=",">user_status </isNotEmpty>
+        	 <isNotEmpty  property="userRemark" prepend=",">user_remark </isNotEmpty>
+        	 <isNotEmpty  property="createTime" prepend=",">create_time </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="dtName" prepend=",">dt_name </isNotEmpty>
+        	 <isNotEmpty  property="emTypeWork" prepend=",">em_typeWork </isNotEmpty>
+        	 <isNotEmpty  property="baseSalary" prepend=",">base_salary </isNotEmpty>
+        	 <isNotEmpty  property="isAdmin" prepend=",">isAdmin </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #userId# ]]> 
+        	 <isNotEmpty  property="userNo"  prepend=","> <![CDATA[#userNo#]]></isNotEmpty>
+        	 <isNotEmpty  property="realName"  prepend=","> <![CDATA[#realName#]]></isNotEmpty>
+        	 <isNotEmpty  property="phoneNum"  prepend=","> <![CDATA[#phoneNum#]]></isNotEmpty>
+        	 <isNotEmpty  property="address"  prepend=","> <![CDATA[#address#]]></isNotEmpty>
+        	 <isNotEmpty  property="dtId"  prepend=","> <![CDATA[#dtId#]]></isNotEmpty>
+        	 <isNotEmpty  property="workId"  prepend=","> <![CDATA[#workId#]]></isNotEmpty>
+        	 <isNotEmpty  property="roleId"  prepend=","> <![CDATA[#roleId#]]></isNotEmpty>
+        	 <isNotEmpty  property="userStatus"  prepend=","> <![CDATA[#userStatus#]]></isNotEmpty>
+        	 <isNotEmpty  property="userRemark"  prepend=","> <![CDATA[#userRemark#]]></isNotEmpty>
+        	 <isNotEmpty  property="createTime"  prepend=","> <![CDATA[#createTime#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="dtName"  prepend=","> <![CDATA[#dtName#]]></isNotEmpty>
+        	 <isNotEmpty  property="emTypeWork"  prepend=","> <![CDATA[#emTypeWork#]]></isNotEmpty>
+        	 <isNotEmpty  property="baseSalary"  prepend=","> <![CDATA[#baseSalary#]]></isNotEmpty>
+        	 <isNotEmpty  property="isAdmin"  prepend=","> <![CDATA[#isAdmin#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="userId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="HyUser.update" >
+        UPDATE hy_user SET
+	        user_id = #userId# 
+	       <isNotEmpty  property="userNo" prepend="," ><![CDATA[ user_no = #userNo# ]]> </isNotEmpty>
+	       <isNotEmpty  property="realName" prepend="," ><![CDATA[ real_name = #realName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="phoneNum" prepend="," ><![CDATA[ phone_num = #phoneNum# ]]> </isNotEmpty>
+	       <isNotEmpty  property="address" prepend="," ><![CDATA[ address = #address# ]]> </isNotEmpty>
+	       <isNotEmpty  property="dtId" prepend="," ><![CDATA[ dt_id = #dtId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="workId" prepend="," ><![CDATA[ work_id = #workId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="roleId" prepend="," ><![CDATA[ role_id = #roleId# ]]> </isNotEmpty>
+	       <isNotEmpty  property="userStatus" prepend="," ><![CDATA[ user_status = #userStatus# ]]> </isNotEmpty>
+	       <isNotEmpty  property="userRemark" prepend="," ><![CDATA[ user_remark = #userRemark# ]]> </isNotEmpty>
+	       <isNotEmpty  property="createTime" prepend="," ><![CDATA[ create_time = #createTime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="dtName" prepend="," ><![CDATA[ dt_name = #dtName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="emTypeWork" prepend="," ><![CDATA[ em_typeWork = #emTypeWork# ]]> </isNotEmpty>
+	       <isNotEmpty  property="baseSalary" prepend="," ><![CDATA[ base_salary = #baseSalary# ]]> </isNotEmpty>
+	       <isNotEmpty  property="isAdmin" prepend="," ><![CDATA[ isAdmin = #isAdmin# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        user_id = #userId# 
+    </update>
+
+    <delete id="HyUser.delete">
+    <![CDATA[
+        DELETE FROM hy_user WHERE
+        user_id = #userId# 
+    ]]>
+    </delete>
+    
+    <delete id="HyUser.deleteByIds">
+    
+    	delete from hy_user where 
+    	user_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+      
+    </delete>
+    
+    <select id="HyUser.getById" resultMap="RM.HyUser">
+	    SELECT <include refid="HyUser.columns"/>
+	    <![CDATA[
+	        FROM hy_user 
+	       left join tb_department on  hy_user.dt_id=tb_department.dt_id
+    	left join tb_work on hy_user.work_id=tb_work.work_id
+	        WHERE 
+		        user_id = #userId# 
+	    ]]>
+    </select>
+	
+	<sql id="HyUser.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="userId">
+		            <![CDATA[ hy_user.user_id = #userId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userNo">
+		            <![CDATA[ hy_user.user_no LIKE concat('%',#userNo#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="realName">
+		            <![CDATA[ hy_user.real_name LIKE concat('%',#realName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="phoneNum">
+		            <![CDATA[ hy_user.phone_num LIKE concat('%',#phoneNum#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="address">
+		            <![CDATA[ hy_user.address LIKE concat('%',#address#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="dtId">
+		            <![CDATA[ hy_user.dt_id = #dtId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="workId">
+		            <![CDATA[ hy_user.work_id = #workId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleId">
+		            <![CDATA[ hy_user.role_id = #roleId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userStatus">
+		            <![CDATA[ hy_user.user_status LIKE concat('%',#userStatus#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userRemark">
+		            <![CDATA[ hy_user.user_remark LIKE concat('%',#userRemark#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeBegin">
+		            <![CDATA[ hy_user.create_time >= #createTimeBegin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeEnd">
+		       		<![CDATA[ hy_user.create_time <= #createTimeEnd# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ hy_user.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="dtName">
+		            <![CDATA[ hy_user.dt_name LIKE concat('%',#dtName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="emTypeWork">
+		            <![CDATA[ hy_user.em_typeWork LIKE concat('%',#emTypeWork#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="baseSalary">
+		            <![CDATA[ hy_user.base_salary = #baseSalary# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="isAdmin">
+		            <![CDATA[ hy_user.isAdmin LIKE concat('%',#isAdmin#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ hy_user.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ hy_user.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="HyUser.findPage.count" resultClass="long">
+        SELECT count(*) FROM hy_user 
+        left join tb_department on  hy_user.dt_id=tb_department.dt_id
+    	left join tb_work on hy_user.work_id=tb_work.work_id
+        <include refid="HyUser.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="HyUser.findPage" resultMap="RM.HyUser">
+    	SELECT <include refid="HyUser.columns"/> FROM hy_user 
+    	left join tb_department on  hy_user.dt_id=tb_department.dt_id
+    	left join tb_work on hy_user.work_id=tb_work.work_id
+    	
+		<include refid="HyUser.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="HyUser.findAll" resultMap="RM.HyUser">
+    	SELECT <include refid="HyUser.columns"/> FROM hy_user
+    	left join tb_department on  hy_user.dt_id=tb_department.dt_id
+    	left join tb_work on hy_user.work_id=tb_work.work_id
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="HyUser.findByCondition" resultMap="RM.HyUser">
+    	SELECT <include refid="HyUser.columns"/> FROM hy_user 
+    	left join tb_department on  hy_user.dt_id=tb_department.dt_id
+    	left join tb_work on hy_user.work_id=tb_work.work_id
+		<include refid="HyUser.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="HyUser.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="userId">
+		            <![CDATA[ hy_user.user_id <> #userId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userNo">
+		            <![CDATA[ hy_user.user_no = #userNo# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="realName">
+		            <![CDATA[ hy_user.real_name = #realName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="phoneNum">
+		            <![CDATA[ hy_user.phone_num = #phoneNum# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="address">
+		            <![CDATA[ hy_user.address = #address# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="dtId">
+		            <![CDATA[ hy_user.dt_id = #dtId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="workId">
+		            <![CDATA[ hy_user.work_id = #workId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleId">
+		            <![CDATA[ hy_user.role_id = #roleId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userStatus">
+		            <![CDATA[ hy_user.user_status = #userStatus# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="userRemark">
+		            <![CDATA[ hy_user.user_remark = #userRemark# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ hy_user.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="dtName">
+		            <![CDATA[ hy_user.dt_name = #dtName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="emTypeWork">
+		            <![CDATA[ hy_user.em_typeWork = #emTypeWork# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="baseSalary">
+		            <![CDATA[ hy_user.base_salary = #baseSalary# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="isAdmin">
+		            <![CDATA[ hy_user.isAdmin = #isAdmin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ hy_user.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ hy_user.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="HyUser.isUnique" resultClass="long">
+        SELECT count(*) FROM hy_user  <include refid="HyUser.isUnique.where"/>
+    </select>
+    
+    <select id="HyUser.findLastOne" resultMap="RM.HyUser">
+    	SELECT <include refid="HyUser.columns"/> 
+    	FROM hy_user 
+    	left join tb_department on  hy_user.dt_id=tb_department.dt_id
+    	left join tb_work on hy_user.work_id=tb_work.work_id
+    	WHERE isAdmin='N' ORDER BY user_no DESC LIMIT 1
+    	
+    	
+    </select>
+    
+	
+</sqlMap>
+

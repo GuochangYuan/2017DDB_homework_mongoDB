@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.HyRole" class="com.vma.code.domain.HyRole">
+        <result property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="menuIds" column="menu_ids"/>
+        <result property="roleStatus" column="role_status"/>
+        <result property="roleRemark" column="role_remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="HyRole.columns">
+	    <![CDATA[
+        hy_role.role_id ,hy_role.role_name ,hy_role.menu_ids ,hy_role.role_status ,hy_role.role_remark ,hy_role.create_time ,hy_role.field1 ,hy_role.field2 ,hy_role.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="HyRole.insert" >
+	   INSERT INTO hy_role (
+        	role_id  
+        	 <isNotEmpty  property="roleName" prepend=",">role_name </isNotEmpty>
+        	 <isNotEmpty  property="menuIds" prepend=",">menu_ids </isNotEmpty>
+        	 <isNotEmpty  property="roleStatus" prepend=",">role_status </isNotEmpty>
+        	 <isNotEmpty  property="roleRemark" prepend=",">role_remark </isNotEmpty>
+        	 <isNotEmpty  property="createTime" prepend=",">create_time </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #roleId# ]]> 
+        	 <isNotEmpty  property="roleName"  prepend=","> <![CDATA[#roleName#]]></isNotEmpty>
+        	 <isNotEmpty  property="menuIds"  prepend=","> <![CDATA[#menuIds#]]></isNotEmpty>
+        	 <isNotEmpty  property="roleStatus"  prepend=","> <![CDATA[#roleStatus#]]></isNotEmpty>
+        	 <isNotEmpty  property="roleRemark"  prepend=","> <![CDATA[#roleRemark#]]></isNotEmpty>
+        	 <isNotEmpty  property="createTime"  prepend=","> <![CDATA[#createTime#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="roleId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="HyRole.update" >
+        UPDATE hy_role SET
+	        role_id = #roleId# 
+	       <isNotEmpty  property="roleName" prepend="," ><![CDATA[ role_name = #roleName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="menuIds" prepend="," ><![CDATA[ menu_ids = #menuIds# ]]> </isNotEmpty>
+	       <isNotEmpty  property="roleStatus" prepend="," ><![CDATA[ role_status = #roleStatus# ]]> </isNotEmpty>
+	       <![CDATA[ ,role_remark = #roleRemark# ]]>
+	       <isNotEmpty  property="createTime" prepend="," ><![CDATA[ create_time = #createTime# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        role_id = #roleId# 
+    </update>
+
+    <delete id="HyRole.delete">
+    <![CDATA[
+        DELETE FROM hy_role WHERE
+        role_id = #roleId# 
+    ]]>
+    </delete>
+    
+    <delete id="HyRole.deleteByIds">
+     <![CDATA[
+    	delete from hy_role where 
+    	role_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+      ]]>
+    </delete>
+    
+    <select id="HyRole.getById" resultMap="RM.HyRole">
+	    SELECT <include refid="HyRole.columns"/>
+	    <![CDATA[
+	        FROM hy_role 
+	        WHERE 
+		        role_id = #roleId# 
+	    ]]>
+    </select>
+	
+	<sql id="HyRole.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="roleId">
+		            <![CDATA[ hy_role.role_id = #roleId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleName">
+		            <![CDATA[ hy_role.role_name LIKE concat('%',#roleName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="menuIds">
+		            <![CDATA[ hy_role.menu_ids LIKE concat('%',#menuIds#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleStatus">
+		            <![CDATA[ hy_role.role_status LIKE concat('%',#roleStatus#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleRemark">
+		            <![CDATA[ hy_role.role_remark LIKE concat('%',#roleRemark#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeBegin">
+		            <![CDATA[ hy_role.create_time >= #createTimeBegin# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="createTimeEnd">
+		       		<![CDATA[ hy_role.create_time <= #createTimeEnd# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ hy_role.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ hy_role.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ hy_role.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="HyRole.findPage.count" resultClass="long">
+        SELECT count(*) FROM hy_role <include refid="HyRole.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="HyRole.findPage" resultMap="RM.HyRole">
+    	SELECT <include refid="HyRole.columns"/> FROM hy_role 
+		<include refid="HyRole.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="HyRole.findAll" resultMap="RM.HyRole">
+    	SELECT <include refid="HyRole.columns"/> FROM hy_role
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="HyRole.findByCondition" resultMap="RM.HyRole">
+    	SELECT <include refid="HyRole.columns"/> FROM hy_role 
+		<include refid="HyRole.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="HyRole.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="roleId">
+		            <![CDATA[ hy_role.role_id <> #roleId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleName">
+		            <![CDATA[ hy_role.role_name = #roleName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="menuIds">
+		            <![CDATA[ hy_role.menu_ids = #menuIds# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleStatus">
+		            <![CDATA[ hy_role.role_status = #roleStatus# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="roleRemark">
+		            <![CDATA[ hy_role.role_remark = #roleRemark# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ hy_role.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ hy_role.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ hy_role.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="HyRole.isUnique" resultClass="long">
+        SELECT count(*) FROM hy_role  <include refid="HyRole.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+

@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<!-- 不使用namespace是由于sql搜索定位会比较方便 -->
+<sqlMap>
+
+    <resultMap id="RM.TbWork" class="com.vma.code.domain.TbWork">
+        <result property="workId" column="work_id"/>
+        <result property="workName" column="work_name"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="TbWork.columns">
+	    <![CDATA[
+        tb_work.work_id ,tb_work.work_name ,tb_work.field1 ,tb_work.field2 ,tb_work.field3 
+	    ]]>
+	</sql>
+	
+    <insert id="TbWork.insert" >
+	   INSERT INTO tb_work (
+        	work_id  
+        	 <isNotEmpty  property="workName" prepend=",">work_name </isNotEmpty>
+        	 <isNotEmpty  property="field1" prepend=",">field1 </isNotEmpty>
+        	 <isNotEmpty  property="field2" prepend=",">field2 </isNotEmpty>
+        	 <isNotEmpty  property="field3" prepend=",">field3 </isNotEmpty>
+        ) VALUES (
+        	<![CDATA[ #workId# ]]> 
+        	 <isNotEmpty  property="workName"  prepend=","> <![CDATA[#workName#]]></isNotEmpty>
+        	 <isNotEmpty  property="field1"  prepend=","> <![CDATA[#field1#]]></isNotEmpty>
+        	 <isNotEmpty  property="field2"  prepend=","> <![CDATA[#field2#]]></isNotEmpty>
+        	 <isNotEmpty  property="field3"  prepend=","> <![CDATA[#field3#]]></isNotEmpty>
+        )
+        
+       	<!--
+       	databaseType
+	    mysql:		type="post" SELECT  select last_insert_id()
+	    sqlserver:	type="post" SELECT  @@identity  AS  ID
+	    oracle:		type="pre" 	SELECT  sequenceName.nextval AS ID FROM DUAL
+	    DB2:		type="pre"	values nextval for sequenceName
+	    -->
+        <selectKey resultClass="java.lang.Integer" type="post" keyProperty="workId" >
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="TbWork.update" >
+        UPDATE tb_work SET
+	        work_id = #workId# 
+	       <isNotEmpty  property="workName" prepend="," ><![CDATA[ work_name = #workName# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field1" prepend="," ><![CDATA[ field1 = #field1# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field2" prepend="," ><![CDATA[ field2 = #field2# ]]> </isNotEmpty>
+	       <isNotEmpty  property="field3" prepend="," ><![CDATA[ field3 = #field3# ]]> </isNotEmpty>
+        WHERE 
+	        work_id = #workId# 
+    </update>
+
+    <delete id="TbWork.delete">
+    <![CDATA[
+        DELETE FROM tb_work WHERE
+        work_id = #workId# 
+    ]]>
+    </delete>
+    
+    <delete id="TbWork.deleteByIds">
+     
+    	delete from tb_work where 
+    	work_id 
+    	 in
+    	<iterate conjunction="," open="(" close=")" property="items">
+        	#items[]#
+      </iterate>
+     
+    </delete>
+    
+    <select id="TbWork.getById" resultMap="RM.TbWork">
+	    SELECT <include refid="TbWork.columns"/>
+	    <![CDATA[
+	        FROM tb_work 
+	        WHERE 
+		        work_id = #workId# 
+	    ]]>
+    </select>
+	
+	<sql id="TbWork.findPage.where">
+	    <dynamic prepend="WHERE">
+		       <isNotEmpty prepend="AND" property="workId">
+		            <![CDATA[ tb_work.work_id = #workId# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="workName">
+		            <![CDATA[ tb_work.work_name LIKE concat('%',#workName#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ tb_work.field1 LIKE concat('%',#field1#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ tb_work.field2 LIKE concat('%',#field2#,'%') ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ tb_work.field3 LIKE concat('%',#field3#,'%') ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+	
+    <select id="TbWork.findPage.count" resultClass="long">
+        SELECT count(*) FROM tb_work <include refid="TbWork.findPage.where"/> 
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="TbWork.findPage" resultMap="RM.TbWork">
+    	SELECT <include refid="TbWork.columns"/> FROM tb_work 
+		<include refid="TbWork.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+			ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <select id="TbWork.findAll" resultMap="RM.TbWork">
+    	SELECT <include refid="TbWork.columns"/> FROM tb_work
+			<isNotEmpty property="sortColumns"> 
+				<![CDATA[ ORDER BY $sortColumns$ ]]>
+			</isNotEmpty>
+    </select>
+
+	
+	<select id="TbWork.findByCondition" resultMap="RM.TbWork">
+    	SELECT <include refid="TbWork.columns"/> FROM tb_work 
+		<include refid="TbWork.findPage.where"/>		
+		<isNotEmpty property="sortColumns">
+					ORDER BY $sortColumns$
+		</isNotEmpty>
+    </select>
+    
+    <sql id="TbWork.isUnique.where">
+	    <dynamic prepend="WHERE">
+        		<isNotEmpty prepend="AND" property="workId">
+		            <![CDATA[ tb_work.work_id <> #workId# ]]>
+		        </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="workName">
+		            <![CDATA[ tb_work.work_name = #workName# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field1">
+		            <![CDATA[ tb_work.field1 = #field1# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field2">
+		            <![CDATA[ tb_work.field2 = #field2# ]]>
+		       </isNotEmpty>
+		       <isNotEmpty prepend="AND" property="field3">
+		            <![CDATA[ tb_work.field3 = #field3# ]]>
+		       </isNotEmpty>
+	    </dynamic>	
+	</sql>
+    <select id="TbWork.isUnique" resultClass="long">
+        SELECT count(*) FROM tb_work  <include refid="TbWork.isUnique.where"/>
+    </select>
+	
+</sqlMap>
+
